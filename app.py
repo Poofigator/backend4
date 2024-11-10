@@ -50,4 +50,4 @@ if __name__ == '__main__':
     conn.commit()
     cursor.close()
     conn.close()
-    app.run(debug=True, port=80) # Запуск сервера на порту 80 с отладкой
+    app.run(debug=True, host='0.0.0.0', port=81) # Запуск сервера на порту 81 с отладкой
