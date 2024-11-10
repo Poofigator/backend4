@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Форма заявки</title>
+</head>
+<body>
+
+  <h1>Оставьте заявку</h1>
+
+  <form id="application-form" method="POST" enctype="multipart/form-data" action="/submit">
+    <label for="name">Ваше имя:</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="email">Ваш email:</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="message">Сообщение:</label><br>
+    <textarea id="message" name="message" required></textarea><br><br>
+
+    <label for="attachment">Вложение:</label><br>
+    <input type="file" id="attachment" name="attachment" accept=".pdf,.doc,.docx,.txt"><br><br>
+
+    <button type="submit">Отправить</button>
+  </form>
+
+  <script>
+    document.getElementById('application-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Предотвращаем стандартную отправку формы
+
+      // Получаем данные из формы
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      const attachmentFile = document.getElementById('attachment').files[0]; // Получаем файл вложения
+
+      // Проверяем, есть ли вложение
+      if (attachmentFile) {
+        // Создаем FormData для отправки файлов
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('message', message);
+        formData.append('attachment', attachmentFile);
+
+        // Отправляем данные на бэк-энд
+        fetch('/submit', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (response.ok) {
+            // Форма успешно отправлена
+            alert('Заявка успешно отправлена!');
+          } else {
+            // Произошла ошибка
+            alert('Ошибка при отправке заявки!');
+          }
+        })
+        .catch(error => {
+          // Произошла ошибка
+          alert('Ошибка при отправке заявки!');
+        });
+      } else {
+        // Отправляем данные без вложения (как раньше)
+        const data = {
+          name: name,
+          email: email,
+          message: message
+        };
+
+        fetch('/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => {
+          if (response.ok) {
+            // Форма успешно отправлена
+            alert('Заявка успешно отправлена!');
+          } else {
+            // Произошла ошибка
+            alert('Ошибка при отправке заявки!');
+          }
+        })
+        .catch(error => {
+          // Произошла ошибка
+          alert('Ошибка при отправке заявки!');
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
